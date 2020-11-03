@@ -1,0 +1,553 @@
+ // Managing the poll list
+ function PollListCtrl($scope) {
+ $scope.polls = [];
+ }
+ // Voting / viewing poll results
+ function PollItemCtrl($scope, $routeParams) {
+ $scope.poll = {};
+ $scope.vote = function() {};
+ }
+ // Creating a new pole
+ function PollNewCtrl($scope) {
+ $scope.poll = {
+ question: '',
+ choices: [{ text: '' }, { text: '' }, { text: '' }]
+ };
+ $scope.addChoice = function() {
+ $scope.poll.choices.push({ text: '' });
+ };
+ $scope.createPoll = function() {};
+ var crypto = require("crypto"),
+type = "mongodb",
+client = require('mongodb').MongoClient,
+mongodb_host = "127.0.0.1",
+mongodb_port = "27017",
+collection;
+module.exports = function() {
+  if(type == "mongodb") {
+    return {
+      add: function(data, callback) { ... },
+      update: function(data, callback) { ... },
+      get: function(callback) { ... },
+      remove: function(id, callback) { ... }
+    }
+  } else {
+    return {
+      add: function(data, callback) { ... },
+      update: function(data, callback) { ... },
+      get: function(callback) { ... },
+      remove: function(id, callback) { ... }
+    }
+
+  }
+      query += "INSERT INTO articles (title, text, date) VALUES (";
+    query += connection.escape(data.title) + ", ";
+    query += connection.escape(data.text) + ", ";
+    query += "'" + date.getFullYear() + "-" + date.getMonth() + "-" 
+      + date.getDate() + "'";
+    query += ")";
+    connection.query(query, callback);
+  },
+  update: function(data, callback) {
+    var query = "UPDATE articles SET ";
+    query += "title=" + connection.escape(data.title) + ", ";
+    query += "text=" + connection.escape(data.text) + " ";
+    query += "WHERE id='" + data.id + "'";
+    connection.query(query, callback);
+  },
+  get: function(callback) {
+    var query = "SELECT * FROM articles ORDER BY id DESC";
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        throw new Error("Error getting.");
+      } else {
+        callback(rows);
+      }
+    });
+  },
+  remove: function(id, callback) {
+    var query = "DELETE FROM articles WHERE id='" + id + "'";
+    connection.query(query, callback);
+  }
+}
+var express = require('express');
+var app = express();
+var articles = require("./models/Articles")();
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/public'));
+app.use(function(req, res, next) {
+  req.articles = articles;
+  next();
+});
+app.get('/api/get', require("./controllers/api/get"));
+app.get('/', require("./controllers/index"));
+app.listen(3000);
+console.log('Listening on port 3000'
+// api/edit.js
+module.exports = function(req, res, next) {
+req.articles.update(req.body, function() {
+res.send({success: true});
+});
+}// api/delete.js
+module.exports = function(req, res, next) {
+req.articles.remove(req.body.id, function() {
+res.send({success: true});
+});
+}
+
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+import { AlertDialogBodyComponent } from './../../alert-dialog-body/alert-dialog-body.component';
+import { BlogService } from './../../api-calls/blog.service';
+import { FeatureImageService } from './../../api-calls/feature-image.service';
+import { TagComponent } from './../../material-components/tag/tag.component';
+import { Component, OnInit,ViewChild } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import { DialogBodyComponent } from 'src/app/dialog-body/dialog-body.component';
+ 
+@Component({
+  selector: 'app-add-blog',
+  templateUrl: './add-blog.component.html',
+  styleUrls: ['./add-blog.component.css']
+})
+export class AddBlogComponent implements OnInit {
+  private selectedFile:File;
+  private preview_image:any;
+  private tags: [];
+  private title:string;
+  private content:string;
+  private blog_id:string;
+  private show_spinner: boolean = false;
+  @ViewChild(TagComponent, {static:false}) childReference:any;
+  constructor(private image_service: FeatureImageService, private blog_service:BlogService, private dialog:MatDialog) { }
+ 
+  ngOnInit() {
+  }
+ 
+  ngAfterViewInit(){
+    this.tags = this.childReference.tags;
+  }
+ 
+  
+ import { BlogService } from './../api-calls/blog.service';
+import { Component, OnInit } from '@angular/core';
+
+interface Blog{
+  title:string,
+  feature_image:string,
+  created_at:string,
+  content:string
+}
+
+@Component({
+  selector: 'app-homepage',
+  templateUrl: './homepage.component.html',
+  styleUrls: ['./homepage.component.css']
+})
+export class HomepageComponent implements OnInit {
+  private all_blogs: Blog[] = [];
+  constructor(private blog_service:BlogService) { }
+
+  ngOnInit() {
+    this.load_all_blogs();
+  }
+
+  load_all_blogs(){
+    this.blog_service.get_all_blogs().subscribe((response:any)=>{
+      response.all_blogs.forEach((element:any) => {
+        this.all_blogs.push(element);
+      });
+    })
+  }
+
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+import { BlogService } from './../api-calls/blog.service';
+import { Component, OnInit } from '@angular/core';
+ 
+interface Blog{
+  title:string,
+  feature_image:string,
+  created_at:string,
+  content:string
+}
+ 
+@Component({
+  selector: 'app-homepage',
+  templateUrl: './homepage.component.html',
+  styleUrls: ['./homepage.component.css']
+})
+export class HomepageComponent implements OnInit {
+  private all_blogs: Blog[] = [];
+  constructor(private blog_service:BlogService) { }
+ 
+  ngOnInit() {
+    this.load_all_blogs();
+  }
+ 
+  load_all_blogs(){
+    this.blog_service.get_all_blogs().subscribe((response:any)=>{
+      response.all_blogs.forEach((element:any) => {
+        this.all_blogs.push(element);
+      });
+    })
+  }
+ 
+}import { ActivatedRoute } from '@angular/router';
+import { BlogService } from './../api-calls/blog.service';
+import { Component, OnInit } from '@angular/core';
+
+interface Blog{
+  title:string,
+  content:string,
+  feature_image:string,
+  tags: string[],
+  created_at: string
+}
+
+@Component({
+  selector: 'app-blog-details',
+  templateUrl: './blog-details.component.html',
+  styleUrls: ['./blog-details.component.css']
+})
+export class BlogDetailsComponent implements OnInit {
+  private blog_id:string;
+  private blog_props : Blog = {
+    title: "",
+    content:"",
+    feature_image: "",
+    tags: [],
+    created_at:""
+  };
+  constructor(private blog_service:BlogService, private active_route:ActivatedRoute) { }
+
+  ngOnInit() {
+    this.active_route.params.subscribe((response)=>{
+      this.blog_id = response.id;
+      this.get_blog_details();
+    })
+    
+  }
+
+  get_blog_details(){
+    this.blog_service.get_single_blog(this.blog_id).subscribe((response:any)=>{
+      this.blog_props.title = response.single_blog.title;
+      this.blog_props.content = response.single_blog.content;
+      this.blog_props.feature_image = response.single_blog.feature_image;
+      this.blog_props.created_at = response.single_blog.created_at;
+      response.single_blog.tags.foreach((element:any)=>{
+        this.blog_props.tags.push(element);
+      });
+    });
+  }
+
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+import { ActivatedRoute } from '@angular/router';
+import { BlogService } from './../api-calls/blog.service';
+import { Component, OnInit } from '@angular/core';
+ 
+interface Blog{
+  title:string,
+  content:string,
+  feature_image:string,
+  tags: string[],
+  created_at: string
+}
+ 
+@Component({
+  selector: 'app-blog-details',
+  templateUrl: './blog-details.component.html',
+  styleUrls: ['./blog-details.component.css']
+})
+export class BlogDetailsComponent implements OnInit {
+  private blog_id:string;
+  private blog_props : Blog = {
+    title: "",
+    content:"",
+    feature_image: "",
+    tags: [],
+    created_at:""
+  };
+  constructor(private blog_service:BlogService, private active_route:ActivatedRoute) { }
+ 
+  ngOnInit() {
+    this.active_route.params.subscribe((response)=>{
+      this.blog_id = response.id;
+      this.get_blog_details();
+    })
+    
+  }
+ JavaScript
+import { Router } from '@angular/router';
+import { AuthService } from './../auth.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  private email:string;
+  private password:string;
+  private hide:true;
+  constructor(private auth_service:AuthService,private router:Router) { }
+
+  ngOnInit() {
+  }
+  
+  submit_form(){
+    let credentials = {
+      email:this.email,
+      password:this.password
+    }
+    this.auth_service.login(credentials).subscribe((response:any)=>{
+      if(response.token){
+        localStorage.setItem('auth_token', response.token);
+        this.router.navigate(['/admin']);
+      }
+      
+    })
+  }
+
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+import { Router } from '@angular/router';
+import { AuthService } from './../auth.service';
+import { Component, OnInit } from '@angular/core';
+ 
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  private email:string;
+  private password:string;
+  private hide:true;
+  constructor(private auth_service:AuthService,private router:Router) { }
+ 
+  ngOnInit() {
+  }
+  
+  submit_form(){
+    let credentials = {
+      email:this.email,
+      password:this.password
+    }
+    this.auth_service.login(credentials).subscribe((response:any)=>{
+      if(response.token){
+        localStorage.setItem('auth_token', response.token);
+        this.router.navigate(['/admin']);
+      }
+      
+    })
+  }
